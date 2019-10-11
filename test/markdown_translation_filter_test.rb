@@ -16,7 +16,7 @@ class MarkdownTranslationFilterTest < Minitest::Test
     # current solution does not properly render children of a node, in this
     # case, <em>
     md = "## Foo bar *baz*"
-    assert_equal '<h2 id="foo-bar-baz">Foo bar baz</h2>', pipeline.call(md)[:output].chomp
+    assert_equal '<h2 id="foo">Foo bar <em>baz</em></h2>', pipeline.call(md)[:output].chomp
   end
 
   def test_it_doesnt_add_weird_linebreaks
