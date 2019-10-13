@@ -20,25 +20,27 @@ class MarkdownTranslationFilter < HTML::Pipeline::TextFilter
 
     doc = CommonMarker.render_doc(@text, parse_options, extensions)
 
-    text = ''
+    changes = []
     doc.each do |node|
       if @parser.respond_to?(node.type)
-        text += @parser.send(node.type, node)
-      elsif node.type == :document
-        next
-      else
-        text += "#{node.to_commonmark(:DEFAULT, -1)}"
+        changes << @parser.send(node.type, node)
       end
     end
 
-    text
+    changes.each do |original, replacement|
+      @text = @text.sub(original, replacement)
+    end
+
+    @text
   end
 end
 
-class HeaderRenderer #< CommonMarker::HtmlRenderer
+class HeaderRenderer
   def header(node)
+    original = node.to_commonmark(:DEFAULT, -1).chomp
     inner = ''
     node.each { |child| inner += child.to_html }
-    "<h#{node.header_level} id=\"foo\">#{inner}</h#{node.header_level}>\n"
+    replacement = "<h#{node.header_level} id=\"foo\">#{inner}</h#{node.header_level}>"
+    [original, replacement]
   end
 end

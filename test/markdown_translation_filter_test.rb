@@ -45,7 +45,7 @@ class MarkdownTranslationFilterTest < Minitest::Test
     md = article_markdown('## Local Workstation Setup', '## Write your App')
     expected = article_markdown("<h2 id=\"foo\">Local Workstation Setup</h2>", "<h2 id=\"foo\">Write your App</h2>")
 
-    assert_equal expected, pipeline.call(md)[:output].chomp
+    assert_equal expected, pipeline.call(md)[:output]
   end
 
   def article_markdown(*replacements)
